@@ -9,6 +9,13 @@ import {Provider} from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import reducer from './slices'
 import logger from 'redux-logger';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
+import SomeComponent from './SomeComponent';
+
 
 // const store = createStore(
 //   allReducers,
@@ -30,7 +37,14 @@ root.render(
 
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+    <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<App />}/>
+        <Route path="ex" element={<SomeComponent />} />
+        {/* <Route path="invoices" element={<Invoices />} /> */}
+      {/* </Route> */}
+    </Routes>
+  </BrowserRouter>
 
     </Provider>
   </React.StrictMode>
