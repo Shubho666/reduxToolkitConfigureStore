@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 // import { createStore } from 'redux';
 // import allReducers from './reducers';
-import {Provider} from 'react-redux';
+import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import reducer from './slices'
 import logger from 'redux-logger';
@@ -14,7 +14,9 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import SomeComponent from './SomeComponent';
+// import SomeComponent from './SomeComponent';
+
+const SomeComponent = lazy(() => import('./SomeComponent'));
 
 
 // const store = createStore(
@@ -22,13 +24,14 @@ import SomeComponent from './SomeComponent';
 //   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 // );
 if (process.env.NODE_ENV !== "development")
-    console.log = () => {};
+  console.log = () => { };
 
-const store =  configureStore({
+const store = configureStore({
   reducer,
-  
+
   middleware: (getDefaultMiddleware) => {
-    return  (process.env.NODE_ENV === 'development' ? getDefaultMiddleware().concat(logger) : getDefaultMiddleware())},
+    return (process.env.NODE_ENV === 'development' ? getDefaultMiddleware().concat(logger) : getDefaultMiddleware())
+  },
   devTools: process.env.NODE_ENV !== 'production'
 })
 
@@ -37,14 +40,16 @@ root.render(
 
   <React.StrictMode>
     <Provider store={store}>
-    <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<App />}/>
-        <Route path="ex" element={<SomeComponent />} />
-        {/* <Route path="invoices" element={<Invoices />} /> */}
-      {/* </Route> */}
-    </Routes>
-  </BrowserRouter>
+      <BrowserRouter>
+        <Suspense fallback={<div>loading..</div>} >
+          <Routes>
+            <Route path="/" element={<App />} />
+            <Route path="ex" element={<SomeComponent />} />
+            {/* <Route path="invoices" element={<Invoices />} /> */}
+            {/* </Route> */}
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
 
     </Provider>
   </React.StrictMode>
